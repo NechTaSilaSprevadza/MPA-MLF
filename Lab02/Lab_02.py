@@ -106,6 +106,7 @@ from matplotlib.image import imread
 from sklearn.cluster import KMeans
 import numpy as np
 
+# 0. Load image
 loaded_image = imread('Data/fish.jpg')
 plt.figure(3)
 plt.imshow(loaded_image)
@@ -113,10 +114,15 @@ plt.show()
 
 def compress_image(image: np.array, number_of_colours: int) -> np.array:
     original_shape = image.shape
+# 1. Firstly reshape your image to 2D array with shape (image.width*image.height, n_of_colour_channels)
     image_reshaped = np.reshape(image, (image.shape[0]*image.shape[1],image.shape[2]))
+# 2. Initialize the K_means algorithm, where K would be equal to the number of colors in the compressed image
     kmeans = KMeans(n_clusters=number_of_colours, random_state=0).fit(image_reshaped)
     cluster_labels = kmeans.labels_
+# 3. check cluster centroids and convert them to integers - these are your new colors (kmeans.cluster_centers_ could be useful)
     colors = kmeans.cluster_centers_.astype('uint8')
+# 4. replace your 2D arrays colors with newly generated colors
+# 5. reshape your 2D array to the original image shape
     new_image = colors[cluster_labels].reshape(original_shape)
     return new_image
 
